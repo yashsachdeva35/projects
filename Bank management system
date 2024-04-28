@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+class bank
+{
+    string accno;
+    string acctype;
+    int balance;
+
+public:
+    void deposit(string, string, int, int);
+    void withdraw(int);
+    void display();
+};
+
+void bank::deposit(string a, string b, int c, int m)
+{
+    accno = a;
+    acctype = b;
+    balance = c;
+    if (m > 0)
+    {
+        balance += m;
+        cout << "THERE IS A SUCCESSFUL DEPOSIT OF " << m << " Dollors" << endl;
+    }
+    else
+    {
+        cout << "UNSUCCESSFUL DEPOSIT" << endl;
+    }
+    cout << "CURRENT BALANCE: " << balance << endl;
+}
+
+void bank::withdraw(int w)
+{
+    cout << "CURRENT BALANCE: " << balance << endl;
+    if (balance >= w)
+    {
+        cout << "SUCCESSFULL WITHRAWL OF " << w << " DOLLOR" << endl;
+        balance -= w;
+    }
+    else
+    {
+        cout << "UNSUCCESSFULL WITHRAWL OF " << w << " DOLLOR" << endl;
+    }
+    cout << "CURRENT BALANCE: " << balance << endl;
+}
+
+void bank::display()
+{
+    cout << "YOUR " << acctype << " ACCOUNT WITH ACCOUNT NUMBER " << accno << " HAS BALANCE OF " << balance << endl;
+}
+
+int main()
+{
+    bank b1;
+    b1.deposit("1234567", "SAVING", 100000000, 100);
+    cout << endl;
+    b1.withdraw(100);
+    cout << endl;
+    b1.display();
+    return 0;
+}
