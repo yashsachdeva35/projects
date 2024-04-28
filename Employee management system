@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+class employee
+{
+    string name;
+    int id;
+    int salary;
+
+public:
+    void display(){
+        cout<<"Name: "<<name<<endl;
+        cout<<"id: "<<id<<endl;
+        cout<<"salary: "<<salary<<endl;
+    }
+    employee(string a, int b, int c):name(a),id(b),salary(c){};
+};
+
+class manager:public employee{
+    string department;
+    public:
+    manager(string a, int b,int c,string d):employee(a,b,c),department(d){};
+    void calculatesalary(){
+        employee::display();
+        cout<<"THE MANAGER OF "<<department<<" DEPARTMENT"<<endl;
+    }
+};
+class worker:public employee{
+    int hoursworked;
+    public:
+    worker(string n, int i, double s, int hours) : employee(n, i, s), hoursworked(hours) {}
+
+    // Function to display worker details
+    void display() {
+        employee::display();
+        cout << "Hours Worked: " << hoursworked << endl;
+    }
+};
+
+int main()
+{
+    manager m("yash",101,100000000,"TECH");
+    m.calculatesalary();
+    worker w("aditya",102,1000000,9);
+    w.display();
+    return 0;
+}
