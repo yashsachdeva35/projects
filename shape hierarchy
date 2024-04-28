@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// abstract class
+class shape
+{
+public:
+    virtual void calculatearea() = 0;
+};
+
+// derived class1
+class rectangle : public shape
+{
+    int length;
+    int width;
+    public:
+    rectangle(){};
+    rectangle(int l, int w) : length(l), width(w){};
+    void calculatearea();
+};
+
+void rectangle::calculatearea()
+{
+    cout << "The Area of rectangle is: " << length * width << endl;
+}
+
+// derived class2
+class circle : public shape
+{
+    int radius;
+    public:
+    circle(){};
+    circle(int r):radius(r){};
+    void calculatearea();
+};
+
+void circle::calculatearea()
+{
+    cout << "The Area of circle is: " << M_PI * radius * radius << endl;
+}
+main()
+{
+    rectangle r(4,5);
+    r.calculatearea();
+    circle c(4);
+    c.calculatearea();
+    return 0;
+}
