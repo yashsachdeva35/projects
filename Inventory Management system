@@ -1,0 +1,116 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+class product
+{
+    int count = 10;
+    int k = 0;
+    int productid[10];
+    string name[10];
+    int price[10];
+    int quantity[10];
+
+public:
+    void add(int pid, string n, int p, int q);
+    void remove(int pid);
+    void updateprice(int pid, int);
+    void updatequantity(int pid, int);
+    void display();
+    int search(int pid);
+};
+
+void product::add(int pid, string n, int p, int q)
+{
+    if (k < count)
+    {
+        if (search(pid) == -1)
+        {
+            productid[k] = pid;
+            name[k] = n;
+            price[k] = p;
+            quantity[k] = q;
+            k++;
+            cout << "This product is Now listed" << endl;
+        }
+        else
+        {
+            cout << "This product is already listed: Can't list it" << endl;
+        }
+    }
+}
+
+void product::remove(int pid)
+{
+    if (search(pid) == -1)
+    {
+        cout << "The product isn't present" << search(pid) << endl;
+    }
+    else
+    {
+        for (int j = search(pid); j < k - 1; j++)
+        {
+
+            name[j] = name[j + 1];
+            price[j] = price[j + 1];
+            quantity[j] = quantity[j + 1];
+        }
+        productid[k - 1] = -1;
+        name[k - 1] = "";
+        price[k - 1] = 0;
+        quantity[k - 1] = 0;
+        k--;
+        cout << "SUCCESFUL REMOVAL" << endl;
+    }
+}
+
+int product::search(int pid)
+{
+    for (int i = 0; i < k; i++)
+    {
+        if (pid == productid[i])
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void product::updateprice(int pid, int pricek)
+{
+    price[pid - 1] = pricek;
+    cout << "successful updation of price" << price[pid] << endl;
+}
+
+void product::updatequantity(int pid, int quantityk)
+{
+    quantity[pid - 1] = quantityk;
+}
+
+void product::display()
+{
+    cout << "PRODUCTID    NAME    PRICE    QUANTITY" << endl;
+    for (int i = 0; i < k; i++)
+    {
+        cout << productid[i] << "    " << name[i] << "    " << price[i] << "    " << quantity[i] << endl;
+    }
+}
+
+int main()
+{
+    product p;
+    p.add(1, "real juice", 19, 50);
+    p.add(2, "mango juice", 19, 50);
+    p.add(3, "lassi", 19, 50);
+    p.display();
+
+    p.remove(3);
+    p.display();
+
+    p.updateprice(2, 20);
+    p.updatequantity(2, 45);
+    p.display();
+
+    return 0;
+}
