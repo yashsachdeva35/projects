@@ -1,0 +1,119 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+class book
+{
+    static int count;
+    static string title[5];
+    static string author[5];
+    static int isbn[5];
+    static int quantity[5];
+
+public:
+    static void add(string, string, int, int);
+    void remove(string, string, int, int);
+    void display();
+};
+
+int book::count = -1;
+string book::title[];
+string book::author[];
+int book::isbn[];
+int book::quantity[];
+
+void book::add(string t, string a, int bn, int q)
+{
+    for (int i = 0; i < 5; i++)
+    {
+        if (isbn[i] == bn)
+        {
+            cout << "failed to add book" << endl;
+            return;
+        }
+    }
+    if (count < 5)
+    {
+        count++;
+        title[count] = t;
+        author[count] = a;
+        isbn[count] = bn;
+        quantity[count] = q;
+        cout << "Book added Successfully" << endl;
+    }
+    else
+    {
+        cout << "failed to add book" << endl;
+    }
+}
+
+void book::remove(string t, string a, int bn, int q)
+{
+    for (int i = 0; i < count; i++)
+    {
+        if (title[i] == t && author[i] == a && isbn[i] == bn)
+        {
+            if (quantity[i] >= q)
+            {
+                quantity[i] -= q;
+                cout << "Successfully removed " << q << " copies of \"" << t << "\"" << endl;
+            }
+            else
+            {
+                cout << "Not enough copies of \"" << t << "\" available to remove" << endl;
+            }
+
+            if (quantity[i] == 0) // If quantity becomes 0, remove the book
+            {
+                for (int j = i; j < count - 1; j++)
+                {
+                    title[j] = title[j + 1];
+                    author[j] = author[j + 1];
+                    isbn[j] = isbn[j + 1];
+                    quantity[j] = quantity[j + 1];
+                }
+                title[count - 1] = "";
+                author[count - 1] = "";
+                isbn[count - 1] = 0;
+                quantity[count - 1] = 0;
+                count--;
+            }
+            return;
+        }
+    }
+    cout << "Can't remove this book: Book not found" << endl;
+}
+
+void book::display()
+{
+    if (count != -1)
+    {
+        cout << "TITLE    AUTHOR    ISBN    QUANTITY" << endl;
+        for (int i = 0; i < 5; i++)
+        {
+            if (title[i] != "" && author[i] != "" && isbn[i] != 0 && quantity[i] != 0)
+            {
+                cout << title[i] << "    " << author[i] << "    " << isbn[i] << "    " << quantity[i] << endl;
+            }
+        }
+    }
+    else
+    {
+        cout << "its empty" << endl;
+    }
+}
+
+int main()
+{
+    book b;
+    b.add("fifty shades", "yash", 1, 5);
+    b.add("fifty shades", "yash", 2, 5);
+    b.add("fifty shades", "yash", 3, 5);
+    b.add("fifty shades", "yash", 4, 5);
+    b.display();
+    b.remove("fifty shades", "yash", 1, 5);
+    b.display();
+
+    return 0;
+}
