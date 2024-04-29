@@ -1,0 +1,80 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+class vehicle
+{
+    string brand;
+    string model;
+    int year;
+
+public:
+    vehicle(string a, string b, int c) : brand(a), model(b), year(c){};
+    void display()
+    {
+        cout << "The brand is: " << brand << endl;
+        cout << "The model is: " << model << endl;
+        cout << "The year is: " << year << endl;
+    }
+    virtual void depriciate() = 0;
+};
+
+class car : vehicle
+{
+    string cartype;
+    int carage;
+    int carcost;
+
+public:
+    car(string a, string b, int c, string d, int e, int f) : vehicle(a, b, c), cartype(d), carage(e), carcost(f){};
+    void display()
+    {
+        cout << "The car type is: " << cartype << endl;
+        vehicle::display();
+    }
+    void depriciate()
+    {
+        for (int i = 0; i < carage; i++)
+        {
+            carcost = (carcost - (carcost * 0.1));
+        }
+        cout << "The value of car now is: " << carcost + 1 << endl;
+    }
+};
+
+class bike : vehicle
+{
+    string biketype;
+    int bikeage;
+    int bikecost;
+
+public:
+    bike(string a, string b, int c, string d, int e, int f) : vehicle(a, b, c), biketype(d), bikeage(e), bikecost(f){};
+    void display()
+    {
+        cout << "The bike type is: " << biketype << endl;
+        vehicle::display();
+    }
+    void depriciate()
+    {
+        for (int i = 0; i < bikeage; i++)
+        {
+            bikecost = (bikecost - (bikecost * 0.1));
+        }
+        cout << "The value of car now is: " << bikecost + 1 << endl;
+    }
+};
+
+int main()
+{
+    car a("TATA", "NEXON", 2023, "SUV", 2, 1400000);
+    a.display();
+    a.depriciate();
+    cout << "\n";
+
+    bike b("ktm & bajaj", "ktm", 2024, "sportsbike", 1, 1400000);
+    b.display();
+    b.depriciate();
+    return 0;
+}
