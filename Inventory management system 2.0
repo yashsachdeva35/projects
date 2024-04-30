@@ -1,0 +1,315 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+// Define the product class
+class product
+{
+private:
+    vector<int> productid; // Vector to store product IDs
+    vector<string> name;   // Vector to store product names
+    vector<int> price;     // Vector to store product prices
+    vector<int> quantity;  // Vector to store product quantities
+
+public:
+    friend class management; // Allow management class to access private members
+    friend class cart;       // Allow cart class to access private members
+};
+
+// Define the management class
+class management
+{
+    int count = 0; // Counter for the number of products
+
+public:
+    // Function to add a product to the inventory
+    void add(int a, string b, int c, int d, product &m);
+
+    // Function to remove a product from the inventory
+    void remove(int p, product &m);
+
+    // Function to update the price of a product in the inventory
+    void updateprice(int pid, int p, product &m);
+
+    // Function to update the quantity of a product in the inventory
+    void updatequantity(int pid, int q, product &m);
+
+    // Function to display the inventory
+    void inventorydisplay(product &m);
+};
+
+// Function to add a product to the inventory
+void management::add(int a, string b, int c, int d, product &m)
+{
+    m.productid.push_back(a); // Add product ID to the vector
+    m.name.push_back(b);      // Add product name to the vector
+    m.price.push_back(c);     // Add product price to the vector
+    m.quantity.push_back(d);  // Add product quantity to the vector
+    count++;                  // Increment product count
+    cout << "Successfully added to inventory. Count: " << count << endl;
+}
+
+// Function to remove a product from the inventory
+void management::remove(int p, product &m)
+{
+    // Find the product ID in the vector
+    auto a = find(m.productid.begin(), m.productid.end(), p);
+
+    // If product ID is found
+    if (a != m.productid.end())
+    {
+        size_t index = distance(m.productid.begin(), a); // Get the index of the product
+
+        // Erase product details from all vectors
+        m.productid.erase(m.productid.begin() + index);
+        m.name.erase(m.name.begin() + index);
+        m.price.erase(m.price.begin() + index);
+        m.quantity.erase(m.quantity.begin() + index);
+        count--; // Decrement product count
+        cout << "Successful removal of inventory item." << endl;
+    }
+    else
+    {
+        cout << "Product with ID " << p << " not found in inventory." << endl;
+    }
+}
+
+// Function to update the price of a product in the inventory
+void management::updateprice(int pid, int p, product &m)
+{
+    // Find the product ID in the vector
+    auto a = find(m.productid.begin(), m.productid.end(), pid);
+
+    // If product ID is found
+    if (a != m.productid.end())
+    {
+        size_t index = distance(m.productid.begin(), a); // Get the index of the product
+
+        m.price[index] = p; // Update the price of the product
+    }
+}
+
+// Function to update the quantity of a product in the inventory
+void management::updatequantity(int pid, int q, product &m)
+{
+    // Find the product ID in the vector
+    auto a = find(m.productid.begin(), m.productid.end(), pid);
+
+    // If product ID is found
+    if (a != m.productid.end())
+    {
+        size_t index = distance(m.productid.begin(), a); // Get the index of the product
+
+        m.quantity[index] = q; // Update the quantity of the product
+    }
+}
+
+// Function to display the inventory
+void management::inventorydisplay(product &m)
+{
+    if (count == 0)
+    {
+        cout << "The inventory is empty." << endl;
+    }
+    else
+    {
+        cout << "PRODUCTID    PRODUCTNAME    PRICE    QUANTITY" << endl;
+        int k = count;
+        for (int i = 0; i < k; i++)
+        {
+            cout << m.productid[i] << "    "
+                 << m.name[i] << "    "
+                 << m.price[i] << "    "
+                 << m.quantity[i] << endl;
+        }
+    }
+}
+
+// Define the cart class
+class cart
+{
+    vector<string> prdname; // Vector to store product names in cart
+    vector<int> quan;       // Vector to store quantities of products in cart
+    vector<int> amount;     // Vector to store total amount of each product in cart
+    int count = 0;          // Counter for the number of products in cart
+
+public:
+    // Function to add a product to the cart
+    int addcart(string, int, product &m);
+
+    // Function to remove a product from the cart
+    void removecart(string, int, product &m, int oldq);
+
+    // Function to calculate total bill
+    void caltotalbill();
+};
+
+// Function to add a product to the cart
+int cart::addcart(string prd, int q, product &m)
+{
+    // Find the product name in the vector
+    auto a = find(m.name.begin(), m.name.end(), prd);
+
+    // If product name is found
+    if (a != m.name.end())
+    {
+        size_t index = distance(m.name.begin(), a); // Get the index of the product
+        if (q <= m.quantity[index])                // If quantity requested is available
+        {
+            prdname.push_back(prd);       // Add product name to the cart
+            quan.push_back(q);            // Add quantity to the cart
+            m.quantity[index] -= q;       // Reduce available quantity
+            amount.push_back(m.price[index] * q); // Add total amount to the cart
+            count++;                      // Increment product count in cart
+            return q;                     // Return the quantity added to the cart
+        }
+        else
+        {
+            cout << "Required quantity not available." << endl;
+            return 0;
+        }
+    }
+    else
+    {
+        cout << "Product not found." << endl;
+        return 0;
+    }
+}
+
+// Function to remove a product from the cart
+void cart::removecart(string prd, int q, product &m, int oldq)
+{
+    // Find the product name in the vector
+    auto t = find(prdname.begin(), prdname.end(), prd);
+
+    // If product name is found in the cart
+    if (t != prdname.end())
+    {
+        size_t indexob = distance(prdname.begin(), t); // Get the index of the product in the cart
+        size_t indexcart = distance(prdname.begin(), t); // Get the index of the product in the cart
+        if (oldq >= q) // If old quantity is greater than or equal to the quantity to remove
+        {
+            quan[indexcart] -= q;         // Reduce quantity in cart
+            m.quantity[indexob] += q;     // Increase available quantity
+        }
+        else
+        {
+            cout << "You can't remove the quantity which you didn't even add." << endl;
+        }
+    }
+}
+
+// Function to calculate total bill
+void cart::caltotalbill()
+{
+    int total = 0;
+    for (int i = 0; i < count; i++)
+    {
+        total += amount[i];
+    }
+    cout << "Total bill: " << total << endl;
+}
+
+// Main function
+int main()
+{
+    product p;        // Create an instance of the product class
+    management m;     // Create an instance of the management class
+    cart ca;          // Create an instance of the cart class
+    m.add(1, "rasna", 23, 100, p); // Add a product to the inventory
+
+    // User interface
+    cout << "WELCOME SIR/MADAM" << endl;
+    cout << "WELCOME TO MIKY BAAZAR" << endl;
+    cout << "WE HAVE ALL RANGE OF PRODUCTS FROM GROCERIES TO ELECTRONICS TO FASHION AND MORE" << endl;
+    int a, b, d = 1;
+    cout << "May I know if you are a manager?" << endl;
+    cout << "Click yes(1) or click no(2)" << endl;
+    cin >> a;
+    while (d != 0)
+    {
+        int c = 69;
+        switch (a)
+        {
+        case 1:
+            cout << "Welcome Manager 1:" << endl;
+            cout << "TO ADD ITEMS IN INVENTORY CLICK(1)" << endl;
+            cout << "TO REMOVE ITEMS FROM INVENTORY CLICK(2)" << endl;
+            cout << "TO UPDATE ITEM PRICE IN INVENTORY CLICK(3)" << endl;
+            cout << "TO UPDATE ITEM QUANTITY IN INVENTORY CLICK(4)" << endl;
+            cout << "TO VIEW INVENTORY CLICK(5)" << endl;
+            cin >> b;
+            while (c != 96)
+            {
+                switch (b)
+                {
+                case 1:
+                    m.add(1, "rasna", 23, 100, p); // Add item to inventory
+                    c = 96;
+                    break;
+                case 2:
+                    m.remove(1, p); // Remove item from inventory
+                    c = 96;
+                    break;
+                case 3:
+                    m.updateprice(1, 20, p); // Update item price in inventory
+                    c = 96;
+                    break;
+                case 4:
+                    m.updatequantity(1, 230, p); // Update item quantity in inventory
+                    c = 96;
+                    break;
+                case 5:
+                    m.inventorydisplay(p); // Display inventory
+                    c = 96;
+                    break;
+                default:
+                    cout << "Invalid input." << endl;
+                    c = 69;
+                    break;
+                }
+                cout << "Want to return to the main menu of manager (1), or to end click(0)?" << endl;
+                cin >> d;
+            }
+            break;
+        case 2:
+            cout << "Welcome Customer 1:" << endl;
+            cout << "TO ADD ITEMS IN CART CLICK(1)" << endl;
+            cout << "TO REMOVE ITEMS FROM CART CLICK(2)" << endl;
+            cout << "TO VIEW CART CLICK(3)" << endl;
+            cin >> b;
+            while (c != 96)
+            {
+                switch (b)
+                {
+                case 1:
+                    ca.addcart("rasna", 5, p); // Add item to cart
+                    c = 96;
+                    break;
+                case 2:
+                    ca.removecart("rasna", 3, p, ca.addcart("rasna", 5, p)); // Remove item from cart
+                    c = 96;
+                    break;
+                case 3:
+                    ca.caltotalbill(); // Calculate total bill
+                    c = 96;
+                    break;
+                default:
+                    cout << "Invalid input." << endl;
+                    c = 69;
+                    break;
+                }
+                cout << "Want to return to the main menu of manager (1), or to end click(0)?" << endl;
+                cin >> d;
+            }
+            break;
+        default:
+            cout << "Invalid input." << endl;
+            break;
+        }
+    }
+    return 0;
+}
