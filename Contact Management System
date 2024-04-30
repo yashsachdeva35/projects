@@ -1,0 +1,105 @@
+#include <iostream>
+#include <iostream>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class contact
+{
+    vector<string> name;
+    vector<string> phone;
+    vector<string> email;
+    int count = 0;
+
+public:
+    void add(string, string, string);
+    void remove(string);
+    void updatename(string,string);
+    void updatenumber(string,string);
+    void updatemail(string,string);
+    int search(string);
+    void display();
+};
+
+void contact::add(string a, string b, string c)
+{
+    auto bt = find(name.begin(), name.end(), a);
+
+    if (bt == name.end())
+    {
+        name.push_back(a);
+        phone.push_back(b);
+        email.push_back(c);
+        count++;
+        cout << "successful addition" << endl;
+    }
+    else{
+        cout<<"its not there";
+    }
+}
+
+void contact::remove(string a)
+{
+        int k=search(a);
+        if(k!=-1){
+        name.erase(name.begin() + k);
+        phone.erase(phone.begin() + k);
+        email.erase(email.begin() + k);
+        count--;
+        cout << "successful removal" << endl;}
+        else{
+            cout<<"can't remove whats not there"<<endl;
+        }
+}
+
+int contact::search(string a){
+    auto bt = find(name.begin(), name.end(), a);
+    size_t index;
+    if(bt!=name.end()){
+        index = distance(name.begin(),bt);
+    }
+    else{
+        index=-1;
+    }
+
+    return index;
+}
+
+void contact::display()
+{
+    cout << "NAME PHONE EMAIL" << endl;
+    for (int i = 0; i < count; i++)
+    {
+        cout << name[i] << " " << phone[i] << " " << email[i] << endl;
+    }
+}
+
+void contact::updatename(string a,string ch){
+    int index = search(a);
+    name[index]=ch;
+}
+
+void contact::updatenumber(string a,string ch){
+    int index = search(a);
+    phone[index]=ch;
+}
+
+void contact::updatemail(string a,string ch){
+    int index = search(a);
+    email[index]=ch;
+}
+
+int main()
+{
+    contact c1;
+    c1.add("yash", "8920175063", "yash@gmail.com");
+    c1.add("ishi", "8595782129", "ishika@gmail.com");
+    c1.updatenumber("yash","dshb");
+    c1.updatemail("yash","dshsvb");
+    c1.updatename("yash","dshbsfv");
+    c1.display();
+    c1.remove("yash");
+    return 0;
+}
